@@ -1,17 +1,18 @@
 import React, {useState, useEffect} from 'react';
-import axios from 'axios';
+import PropTypes from 'prop-types';
 
-const Weather = () => {
-    const [weather, setWeather] = useState(null);
+const Weather = ({city}) => {
+    const [weatherData, setWeatherData] = useState(null);
     const API_KEY = '799d910d15b831d9c04e2c7af42b8483';
-    const city = 'yourCity'
+
 
     useEffect(()=>{
-        axios
-            .get( `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`)
-            .then(response => setWeatherData (respond.data))
+        fetch ( `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`)
+            .then (response=> response.json())
+            .then(response => console.log (response))
+            .then(response => setWeatherData (response))
             .catch(error => console.error("Error featching the weather data", error));
-    }, [])
+    }, [city])
 
     return (
         <div>
@@ -27,5 +28,7 @@ const Weather = () => {
         </div>
     );
 };
-
+Weather.propTypes = {
+    city: PropTypes.string.isRequired,
+  };
 export default Weather;
