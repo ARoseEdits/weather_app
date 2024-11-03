@@ -61,43 +61,38 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
-const Weather = ({city}) => {
-  const [weatherData, setWeatherData] = useState(null);
+const Weather = ({city, onDataFetched}) => {
+  // const [weatherData, setWeatherData] = useState(null);
   const API_KEY = '799d910d15b831d9c04e2c7af42b8483';
   useEffect(() => {
+    if (city) {
     fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`)
       .then(response => response.json())
       .then(data => {
         console.log(data);
-        setWeatherData(data);
+        onDataFetched(data);  
+        // setWeatherData(data);
       })
       .catch(error => console.error("Error fetching the weather data", error));
-  }, [city]);
+  }
+}, [city, onDataFetched]);
+
+return null;
+};
   
 
-// function App() {
-  return (
-    <div>
-      {weatherData ? (
-        <div>
-          <h2>Weather in {city}</h2>
-          <p>Temperature: {weatherData.main.temp}°C</p>
-          <p>Conditions: {weatherData.weather[0].description}</p>
-        </div>
-      ) : (
-        <p>Loading...</p>
-      )}
-    </div>
-  );
-};
-
-Weather.propTypes = {
-  city: PropTypes.string.isRequired,
-};
-
 function App() {
+  const [weatherData, setWeatherData] =useState(null)
+  const city ="London"; 
+  // this is curently an example city 
+
+  const handleDataFetched = (data) => {
+    setWeatherData(data);
+  };
+
+
   return (
-    <div className="App">
+     <div className="App">
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar>
@@ -117,21 +112,42 @@ function App() {
         </AppBar>
       </Box>
 
-      <Weather city="London" />
+      <Weather city={city} onDataFetched={handleDataFetched} />
 
-      <TableContainer component={Paper}>
-        <Table aria-label="current weather">
-          <TableHead>
-            <TableRow>
-              <TableCell>City</TableCell>
-              <TableCell align="center">Temperature (°C)</TableCell>
-              <TableCell align="center">Weather</TableCell>
-              <TableCell align="center">Humidity (%)</TableCell>
-              <TableCell align="center">Wind Speed (m/s)</TableCell>
-            </TableRow>
-          </TableHead>
+         {/* Centered Main Weather Display */}
+         {weatherData && (
+        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+          <Typography variant="h4">{weatherData.name}</Typography>
+          <div>
+            <img
+              src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`}
+              alt={weatherData.weather[0].description}
+            />
+            <Typography variant="h5">
+              {weatherData.main.temp.toFixed(1)}°C, {weatherData.weather[0].main}
+            </Typography>
+          </div>
+        </div>
+      )}
+
+      {/* Details Table */}
+      <TableContainer component={Paper} style={{ marginTop: '20px', maxWidth: '400px', margin: 'auto' }}>
+        <Table aria-label="weather details">
           <TableBody>
-            {/* Populate table data if needed */}
+            <TableRow>
+              <TableCell>Humidity</TableCell>
+              <TableCell align="right">{weatherData?.main.humidity}%</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Wind Speed</TableCell>
+              <TableCell align="right">{weatherData?.wind.speed} m/s</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Chance of Rain</TableCell>
+              <TableCell align="right">
+                {weatherData?.rain ? `${weatherData.rain["1h"]} mm` : 'N/A'}
+              </TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
