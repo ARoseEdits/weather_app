@@ -10,6 +10,7 @@ To install this project you will need to have Node.js installed on your computer
 I plan to add more features to this app. Some of the things I plan to add are: 
 - The ability to save locations for easy access
 - A map that you can use to pick your location 
+- Add more styling and change the colours 
 
-
-
+### Contributing 
+If you wish to contribute please create a separate branch to creat changes on. You will have to set up your own API key for the open weather map API, especial if you are going to be using this for you own project. 
