@@ -13,7 +13,13 @@ import InputBase from '@mui/material/InputBase'
 import MenuIcon from '@mui/icons-material/Menu'
 import SearchIcon from '@mui/icons-material/Search'
 import Weather from './Weather.jsx'
-
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -56,10 +62,26 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
+// const Weather = () => {
+//   const [weatherData, setWeatherData] = useState(null);
+//   const API_KEY = 'your_api_key_here'; // Replace with your actual API key
+//   const city = 'your_city_here';
 
+  // useEffect(() => {
+  //   fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`)
+  //     .then(response => {
+  //       if (!response.ok) {
+  //         throw new Error("Network response was not ok");
+  //       }
+  //       return response.json();
+  //     })
+  //     .then(data => setWeatherData(data))
+  //     .catch(error => console.error("Error fetching the weather data:", error));
+  // }, []);
 
 function App() {
   return (
+    <div className="App">
     <Box sx={{ flexGrow: 1 }}>
     <AppBar position="static">
       <Toolbar>
@@ -94,32 +116,41 @@ function App() {
     <Weather city="London" />
   </Box>
 
-  // const [count, setCount] = useState(0)
 
-  // return (
-  //   <>
-  //     <div>
-  //       <a href="https://vitejs.dev" target="_blank">
-  //         <img src={viteLogo} className="logo" alt="Vite logo" />
-  //       </a>
-  //       <a href="https://react.dev" target="_blank">
-  //         <img src={reactLogo} className="logo react" alt="React logo" />
-  //       </a>
-  //     </div>
-  //     <h1>Vite + React</h1>
-  //     <div className="card">
-  //       <button onClick={() => setCount((count) => count + 1)}>
-  //         count is {count}
-  //       </button>
-  //       <p>
-  //         Edit <code>src/App.jsx</code> and save to test HMR
-  //       </p>
-  //     </div>
-  //     <p className="read-the-docs">
-  //       Click on the Vite and React logos to learn more
-  //     </p>
-  //   </>
-  )
-}
+   <TableContainer component={Paper}>
+   <Table aria-label="current weather">
+     <TableHead>
+       <TableRow>
+         <TableCell>City</TableCell>
+         <TableCell align="center">Temperature (°C)</TableCell>
+         <TableCell align="center">Weather</TableCell>
+         <TableCell align="center">Humidity (%)</TableCell>
+         <TableCell align="center">Wind Speed (m/s)</TableCell>
+       </TableRow>
+     </TableHead>
+     <TableBody>
+       {weatherData ? (
+         <TableRow>
+           <TableCell>{weatherData.name}</TableCell>
+           <TableCell align="center">{weatherData.main.temp.toFixed(1)}</TableCell>
+           <TableCell align="center">
+             <img src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}.png`} alt={weatherData.weather[0].description} />
+             {weatherData.weather[0].main}
+           </TableCell>
+           <TableCell align="center">{weatherData.main.humidity}</TableCell>
+           <TableCell align="center">{weatherData.wind.speed}</TableCell>
+         </TableRow>
+       ) : (
+         <TableRow>
+           <TableCell colSpan={5} align="center">Loading...</TableCell>
+         </TableRow>
+       )}
+     </TableBody>
+   </Table>
+ </TableContainer>
+ </div>
+);
+};
+
 
 export default App
