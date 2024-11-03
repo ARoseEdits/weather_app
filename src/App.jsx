@@ -14,10 +14,11 @@ import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
+// import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import PropTypes from 'prop-types'
+import Button from '@mui/material'
+// import PropTypes from 'prop-types'
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -82,14 +83,19 @@ return null;
   
 
 function App() {
-  const [weatherData, setWeatherData] =useState(null)
-  const city ="London"; 
-  // this is curently an example city 
+  const [city, setCity] = useState("London"); // Default city
+  const [inputCity, setInputCity] = useState("");
+  const [weatherData, setWeatherData] = useState(null);
 
   const handleDataFetched = (data) => {
     setWeatherData(data);
   };
 
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    setCity(inputCity);
+    setInputCity(""); // Clear the input after search
+  };
 
   return (
      <div className="App">
@@ -102,12 +108,20 @@ function App() {
             <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>
               Local Weather App
             </Typography>
+            <form onSubmit={handleSearchSubmit} style={{ display: 'flex' }}>
             <Search>
               <SearchIconWrapper>
                 <SearchIcon />
               </SearchIconWrapper>
-              <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
+              <StyledInputBase
+                  placeholder="Search city…"
+                  inputProps={{ 'aria-label': 'search' }}
+                  value={inputCity}
+                  onChange={(e) => setInputCity(e.target.value)}
+                />
             </Search>
+            <Button type="submit" color="inherit">Search</Button>
+            </form>
           </Toolbar>
         </AppBar>
       </Box>
